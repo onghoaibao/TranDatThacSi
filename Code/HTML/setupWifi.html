@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script type="text/javascript">
+      function connectWifi(){
+        var nameWifi = document.getElementById("wifi").value;
+        var passWifi = document.getElementById("passwordWifi").value;
+        alert("Wifi Name: " + nameWifi + "  Password: " + passWifi);
+        window.location.href = "/connectWifi?" + "wifi=" + nameWifi + "&pass=" + passWifi;
+        return true;
+      }
+
+    function refresh(){
+        window.location.href = '/setupWifi';
+        return true;
+      }
+    </script>
+    <style type="text/css">
+        body{
+          margin: 0;
+          padding: 0;
+          background: #000080;
+        }
+        select {
+            height:30px;
+            width: auto;
+            line-height:30px;
+            background:#f4f4f4;
+        }
+    </style>
+</head>
+<body>
+    <div name="form"  method="get" style="
+      width: 700px;
+      text-align: center;
+      position: absolute;
+      padding: 40px;
+      background:#ffcc00;
+      transform: translate(-50%, -50%);
+      top: 35%;
+      left: 50%;
+      border-radius: 15px;">
+    <h1 style="color:black; font-size: 35px; ">CONNECT WIFI FOR ESP8266</h1>
+    <label for="cars" style="color: black; font-size: 25px; ">WIFI</label>
+    <select id="wifi" style="color:black; width:200px; font-size: 18px;">
+        [###]
+    </select>
+
+    <label for="cars" style="color: black; font-size: 25px; margin-left: 15px auto">PASS</label>
+    <input 
+          style="height: 26px; width: 100px;margin: 10px auto; font-size: 18px;"
+    	  type="text" id="passwordWifi" name="passwordWifi">
+
+    <input 
+          style="height: 25px;width: 70px;margin: 10px auto;border-radius: 15px;
+                 outline: none;border: 0;background: #ff0000;font-size: 15px;"
+          type="submit" action="/setupWifi" value="Refresh" onclick="return refresh()">
+
+    <br>
+
+    <input  style="height: 32px;width: 150px;font-size: 20px;margin: 15px auto;border-radius: 15px;outline: none;border:0;
+    				background: #ff0000;"
+    		type="submit" name="wifi" value="Connect" onclick="return connectWifi()">
+</div>
+</body>
+</html>
+
+<!--  action="/connectWifi"  -->
+<!-- onclick="connectWifi() -->
