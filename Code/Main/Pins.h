@@ -4,8 +4,8 @@
 #define __PINS__
 
 // Bluetooth HM10 
-const byte RX_HM10 = D3;
-const byte TX_HM10 = D4;
+const byte RX_HM10 = D4;
+const byte TX_HM10 = D3;
 
 // SD Card
 //const byte MISO_SDC;

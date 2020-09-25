@@ -12,6 +12,9 @@ void handleClientServer() {
 }
 
 void initServerLocal() {
+  ssid =  getSSID_WIFI();
+  pass =  getPASS_WIFI();
+
   WiFi.mode(WIFI_AP_STA);
   WiFi.softAP(NAME_WIFI_ESP8266, PASS_WIFI_ESP8266);
   WiFi.begin(ssid, pass);
@@ -73,29 +76,69 @@ void initServerLocal() {
     sv.send(200, "text/html", sSetup);
   });
 
+  sv.on("/setmac", HTTP_ANY, [] {
+    //Serial.println(String("Accept: ") + ++count);
+    sv.send(200, "text/html",
+    "<meta charset='utf-8'>"
+    "<html>"
+    "<head>"
+    "<title>Configuration Mac Address</title>"
+    "</head>"
+    "<body>"
+    "<form method='POST' action='/setmac' enctype='multipart/form-data'>"
+    "<h2>Configuration Mac Address (ConfigHTTP.txt)</h2>"
+    "<input type='file' name='SelectFile'>"
+    "<input type='submit' name='SubmitFile' value='Send File'>"
+    "</form>"
+    "</body>"
+    "</html");
+  }, [] {
+    HTTPUpload& file = sv.upload();
+    if (file.status == UPLOAD_FILE_START) {
+      Serial.println("Start File: " + file.filename);
+      bool b = isExistFile(String(file.filename));
+      if(b){
+        removeContentFile(file.filename);
+      }
+    }
+    else if (file.status == UPLOAD_FILE_WRITE) {
+      Serial.println("File dang ghi: " + file.filename);
+      saveFile(file.filename, (const char*)file.buf, file.currentSize);
+    }
+    else if (file.status == UPLOAD_FILE_END) {
+      Serial.println("File da ghi xong\n-------------\n" + getStringFile("configHTTP.txt"));
+    }
+  });
+
   sv.on("/tabledata", [] {
     String sTable = getStringFile("tabledata.html");
-    Serial.println(sTable);
     String data  = "";
-
-  //test table
-  for(int i=12; i<30; i++){
-    data += String("<tr>") + 
-                  String("<th>") + String(i) + String("</th>") + 
-                  String("<th>") + String(i) + String("</th>") + 
-                  String("<th>") + String(i) + String("</th>") + 
-                  String("<th>") + String(i) + String("</th>") + 
-                  String("<th>") + String(i) + String("</th>") + 
-                  String("<th>") + String(i) + String("</th>") + 
-                  String("<th>") + String("20:20:") + String(i) + String("</th>") + 
-                  String("</tr>");
-  }                  
-//getDataFromH10();
+    for (int i = 12; i < 30; i++) {
+      data += String("<tr>") +
+      String("<th>") + String(i) + String("</th>") +
+      String("<th>") + String(i) + String("</th>") +
+      String("<th>") + String(i) + String("</th>") +
+      String("<th>") + String(i) + String("</th>") +
+      String("<th>") + String(i) + String("</th>") +
+      String("<th>") + String(i) + String("</th>") +
+      String("<th>") + String("20:20:") + String(i) + String("</th>") +
+      String("</tr>");
+    }
+    //getDataFromH10();
     sTable += data + "</table></body></html>";
-
     sv.send(200, "text/html", sTable);
   });
 
+  sv.on("/connectWifi", [] {
+    String ssid = String(sv.arg("wifi"));
+    String pass = String(sv.arg("pass"));
+    accessWifi(ssid, pass);
+    Serial.println(String("Wifi: ") + ssid + " len: " + String(ssid.length()));
+    Serial.println(String("Pass: ") + pass + " len: " + String(pass.length()));
+    getSSID_WIFI();
+    getPASS_WIFI();
+    sv.send(200, "text/html", "<h1>Wifi Is Connecting</h1>");
+  });
   //start server
   sv.begin();
 }
