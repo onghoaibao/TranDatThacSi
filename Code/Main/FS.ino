@@ -13,9 +13,9 @@ void initFS() {
   getAllMacByFile();
   contentMac = getStringFile("setmac.txt");
   setNameByMac();
-  for (int i = 0; i < 10; i++) {
-    Serial.println("Mac: " + listmac[i] + "  len: " + String(listmac[i].length()));
-  }
+//  for (int i = 0; i < 10; i++) {
+//    Serial.println("Mac: " + listmac[i] + "  len: " + String(listmac[i].length()));
+//  }
 }
 
 boolean saveFile(String fileName, const char* content, uint16_t len) {
@@ -52,7 +52,7 @@ String listAllFile() {
   Dir dir = SPIFFS.openDir("/");
   while (dir.next()) {
     str += dir.fileName() + " ";
-    Serial.println("File name: " + String(dir.fileName()));
+    //Serial.println("File name: " + String(dir.fileName()));
   }
   return str;
 }
@@ -62,7 +62,7 @@ void getAllMacByFile() {
   int i = 0;
   int newix = str.indexOf(":", i);
   int oldix = 0;
-  while (newix != -1 && i < 10) {
+  while (newix != -1 && i < SIZE_MAC) {
     newix = str.indexOf(":", oldix + 1);
     if (newix != -1) {
       if (i == 0) {
@@ -82,7 +82,7 @@ void setNameByMac() {
   String ives = contentMac;
   int idStart = 0;
   int idStop  = 0;
-  for (int i = 0; i < 10; i++) {
+  for (int i = 0; i < SIZE_MAC; i++) {
     idStart = ives.indexOf(":", idStart + 1);
     idStop  = ives.indexOf("\n", idStop + 1);
     if (idStart != -1 && idStop != -1) {

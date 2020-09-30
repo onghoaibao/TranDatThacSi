@@ -7,7 +7,7 @@ void initSDcard() {
     Serial.println("Card failed, or not present");
     return;
   }
-  saveData("Ten Thiet Bi", "Vi Tri 1", "Vi Tri 2", "Vi Tri 3", "Ngay/Gio\n");
+  saveData("Ten Thiet Bi", "Vi Tri 1", "Vi Tri 2", "Vi Tri 3", "Ngay/Gio\n", true);
   Serial.println("card initialized.");
 }
 
@@ -22,14 +22,16 @@ void saveDataToFile(String sData) {
   printDirectory(SDCard);
 }
 
-void saveData(String pos, String t1, String t2, String t3, String _time_) {
+void saveData(String pos, String t1, String t2, String t3, String _time_, bool st) {
   String data = pos + "," + t1 + "," + t2 + "," + t3 + "," + _time_;
   if (SD.exists("data.csv")) {
-    SDCard = SD.open("data.csv", FILE_WRITE);
-    if (SDCard) {
-      SDCard.print(data);
-      SDCard.close();
-      Serial.println("Writing to file successfully!");
+    if (!st) {
+      SDCard = SD.open("data.csv", FILE_WRITE);
+      if (SDCard) {
+        SDCard.print(data);
+        SDCard.close();
+        Serial.println("Writing to file successfully!");
+      }
     }
   }
   else {

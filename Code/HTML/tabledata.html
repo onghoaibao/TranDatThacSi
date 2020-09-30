@@ -3,13 +3,6 @@
 <head>
 <meta charset="UTF-8">
 <title>Temperature Data</title>
-<script>
-function refresh(refreshPeriod) 
-{
-  setTimeout('location.reload(true)', refreshPeriod);
-} 
-window.onload = refresh(3000);
-</script>
 <style>
 table {
 width: 1300px;
@@ -53,7 +46,7 @@ margin-right:auto;
 .rectangle_cam {
   height: 30px;
   width: 100px;
-  background-color: #ff9900;
+  background-color: #ffcc00;
   display: inline-block;
   text-align:center;
   font-size: 150%;
@@ -72,7 +65,6 @@ margin-right:auto;
 <br>
 <table class="center">
 <tr>
-<th rowspan="2"; style="font-size:150%;">Số Thứ Tự</th>
 <th rowspan="2"; style="font-size:150%;">Tên Thiết Bị</th>
 <td colspan="3"; style="font-weight: bold;font-size:150%;">Nhiệt Độ (°C)</td>
 <th rowspan="2"; style="font-weight: bold;font-size:150%;">Thời Gian</th>
@@ -83,7 +75,3 @@ margin-right:auto;
 <th style="font-weight: bold;font-size:120%;">Vị Trí 2</th>
 <th style="font-weight: bold;font-size:120%;">Vị Trí 3</th>
 </tr>
-[DATA_TEMP]
-</table>
-</body>
-</html>

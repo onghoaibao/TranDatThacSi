@@ -20,19 +20,15 @@ void handleData(String sData) {
         int pos1 = majo / 100;
         int pos2 = majo % 100;
         int pos3 = mnor;
-        Serial.println("Temper pos 1: " + String(pos1));
-        Serial.println("Temper pos 2: " + String(pos2));
-        Serial.println("Temper pos 3: " + String(pos3));
         mapData[mac] = {{String(pos1), String(pos2), String(pos3)}};
         sSaveFile += mapName[mac] + "," + String(pos1) + "," + String(pos2) + "," +  String(pos3) + "," + time_now + "/" + date_now + "\n";
-        //saveData(mapName[mac], String(pos1), String(pos2), String(pos3), time_now + "-" + date_now);
       }
       else{
         sSaveFile += mapName[mac] + "," + String(9999) + "," + String(9999) + "," +  String(9999) + "," + time_now + "/" + date_now + "\n";
       }
     }
   }
-  Serial.println(sSaveFile);
+  getHTML();
   saveDataToFile(sSaveFile);
 }
 
@@ -46,7 +42,7 @@ long convertHexToDec(String sdt) {
 }
 
 void initMapData() {
-  for (int i = 0; i < 10; i++) {
+  for (int i = 0; i < SIZE_MAC; i++) {
     String mac = listmac[i];
     if (mac != "") {
       mapData[mac] = {{"9999", "9999", "9999"}};

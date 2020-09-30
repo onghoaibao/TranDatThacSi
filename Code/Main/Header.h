@@ -13,13 +13,16 @@
 #include <NTPClient.h>
 #include <WiFiUdp.h>
 #include <map>
+#include <LiquidCrystal_I2C.h>
 
+const int SIZE_MAC = 6;
 String rx_data[3] = {};
-String listmac[10] = {};
+String listmac[SIZE_MAC] = {};
 
 // Main function
 int CouterTime = 0;
 String sTable = "";
+int nLine = 0;
 void setupFunction();
 long convertHexToDec(String sdt);
 void wait(int t);
@@ -27,6 +30,7 @@ void wait(int t);
 // Server Function
 void initServerLocal();
 void handleClientServer();
+String getHTML();
 
 // LCD Function
 void initLCD();
@@ -34,7 +38,7 @@ void showLCD();
 
 // SD-Card Function
 void initSDcard();
-void saveData(String pos, String t1, String t2, String t3, String _time_);
+void saveData(String pos, String t1, String t2, String t3, String _time_, bool st);
 void saveDataToFile(String sData);
 void printDirectory(File dir);
 

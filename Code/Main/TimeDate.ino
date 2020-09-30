@@ -33,8 +33,8 @@ String getTimeFormat() {
   String currentTime = String(currentHour < 10 ? (String(0) + currentHour) : currentHour) + ":" +
                        String(currentMinute < 10 ? (String(0) + currentMinute) : currentMinute) + ":" + 
                        String(currentSecond < 10 ? (String(0) + currentSecond) : currentSecond);
-  Serial.println("Current time: " + currentTime);
-  Serial.println("");
+  //Serial.println("Current time: " + currentTime);
+  //Serial.println("");
   return  currentTime;
 }
 
@@ -47,7 +47,7 @@ String getDateFormat() {
   String currentMonthName = months[currentMonth - 1];
   int currentYear = ptm->tm_year + 1900;
   String currentDate = String(monthDay < 10 ? String(0) + monthDay : monthDay) + "-" + String(currentMonth < 10 ? String(0) + currentMonth : currentMonth) + "-" + String(currentYear);
-  Serial.println("Current date: " + currentDate);
+  //Serial.println("Current date: " + currentDate);
   return currentDate;
 }
 
