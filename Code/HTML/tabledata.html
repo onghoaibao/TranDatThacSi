@@ -8,7 +8,7 @@ function refresh(refreshPeriod)
 {
   setTimeout('location.reload(true)', refreshPeriod);
 } 
-window.onload = refresh(5000);
+window.onload = refresh(3000);
 </script>
 <style>
 table {
@@ -28,27 +28,55 @@ table.center {
 margin-left:auto;
 margin-right:auto;
 }
+
+.rectangle_do {
+  height: 30px;
+  width: 100px;
+  background-color: #FF0000;
+  display: inline-block;
+  text-align:center;
+  font-size: 150%;
+  border-style: solid;
+
+}
+
+.rectangle_xanh {
+  height: 30px;
+  width: 100px;
+  display: inline-block;
+  text-align:center;
+  font-size: 150%;
+  border-style: solid;
+  background-color: #00cc00
+}
+
+.rectangle_cam {
+  height: 30px;
+  width: 100px;
+  background-color: #ff9900;
+  display: inline-block;
+  text-align:center;
+  font-size: 150%;
+  border-style: solid;
+}
+
 </style>
 </head>
 <body>
-<p style="text-align:center; color:#099B31;font-size:250%;font-weight: bold;">TEMPERATURE DATA<br>[DATE]</p>
+<p style="text-align:center; color:#099B31; font-size:250%; font-weight: bold;">TEMPERATURE DATA<br>[DATE]</p>
+<form style="margin-left: 40%; margin-right:40%; width: 20%;">
+<div class="rectangle_xanh">An Toan</div>
+<div class="rectangle_cam">Cao</div>
+<div class="rectangle_do">Rat Cao</div>
+</form>
+<br>
 <table class="center">
-
 <tr>
+<th rowspan="2"; style="font-size:150%;">Số Thứ Tự</th>
 <th rowspan="2"; style="font-size:150%;">Tên Thiết Bị</th>
 <td colspan="3"; style="font-weight: bold;font-size:150%;">Nhiệt Độ (°C)</td>
 <th rowspan="2"; style="font-weight: bold;font-size:150%;">Thời Gian</th>
 </tr>
-
-<tr>
-<th style="font-weight: bold;font-size:120%;">Vị Trí 1</th>
-<th style="font-weight: bold;font-size:120%;">Vị Trí 2</th>
-<th style="font-weight: bold;font-size:120%;">Vị Trí 3</th>
-</tr>
-[DATA_TEMP]
-</table>
-</body>
-</html>
 
 <tr>
 <th style="font-weight: bold;font-size:120%;">Vị Trí 1</th>
