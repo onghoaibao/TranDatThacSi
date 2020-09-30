@@ -14,7 +14,8 @@ void handleClientServer() {
 void initServerLocal() {
   ssid =  getSSID_WIFI();
   pass =  getPASS_WIFI();
-
+  sTable = getStringFile("tabledata.html");
+  sTable.replace("[DATE]", date_now);
   WiFi.mode(WIFI_AP_STA);
   WiFi.softAP(NAME_WIFI_ESP8266, PASS_WIFI_ESP8266);
   WiFi.begin(ssid, pass);
@@ -86,7 +87,7 @@ void initServerLocal() {
     "</head>"
     "<body>"
     "<form method='POST' action='/setmac' enctype='multipart/form-data'>"
-    "<h2>Configuration Mac Address (ConfigHTTP.txt)</h2>"
+    "<h2>Configuration Mac Address (setmac.txt)</h2>"
     "<input type='file' name='SelectFile'>"
     "<input type='submit' name='SubmitFile' value='Send File'>"
     "</form>"
@@ -97,7 +98,7 @@ void initServerLocal() {
     if (file.status == UPLOAD_FILE_START) {
       Serial.println("Start File: " + file.filename);
       bool b = isExistFile(String(file.filename));
-      if(b){
+      if (b) {
         removeContentFile(file.filename);
       }
     }
@@ -111,21 +112,32 @@ void initServerLocal() {
   });
 
   sv.on("/tabledata", [] {
-    String sTable = getStringFile("tabledata.html");
+    CouterTime++;
+    Serial.println("Size now: " + String(CouterTime));
+    sTable = getStringFile("tabledata.html");
+    sTable.replace("[DATE]", date_now);
     String data  = "";
-    for (int i = 12; i < 30; i++) {
-      data += String("<tr>") +
-      String("<th>") + String(i) + String("</th>") +
-      String("<th>") + String(i) + String("</th>") +
-      String("<th>") + String(i) + String("</th>") +
-      String("<th>") + String(i) + String("</th>") +
-      String("<th>") + String(i) + String("</th>") +
-      String("<th>") + String(i) + String("</th>") +
-      String("<th>") + String("20:20:") + String(i) + String("</th>") +
-      String("</tr>");
+    int mspSize = mapData.size();
+    for (int i = 0; i < mspSize; i++) {
+      if (i == 0) {
+        data += String("<tr>") +
+        String("<th>") + String(mapName[listmac[i]]) + String("</th>") +
+        String("<th>") + String(mapData[listmac[i]][0]) + String("</th>") +
+        String("<th>") + String(mapData[listmac[i]][1]) + String("</th>") +
+        String("<th>") + String(mapData[listmac[i]][2]) + String("</th>") +
+        String("<th rowspan=\"") + String(mspSize) + String("\">") + String(time_now) + String("</th>") + String("</tr>");
+      }
+      else {
+        data += String("<tr>") +
+                String("<th>") + String(mapName[listmac[i]]) + String("</th>") +
+                String("<th>") + String(mapData[listmac[i]][0]) + String("</th>") +
+                String("<th>") + String(mapData[listmac[i]][1]) + String("</th>") +
+                String("<th>") + String(mapData[listmac[i]][2]) + String("</th>") + String("</tr>");
+      }
     }
-    //getDataFromH10();
     sTable += data + "</table></body></html>";
+    Serial.println("Size tabledata.html: " + String(sTable.length()));
+    sTable = sTable.length() > 20000 ? "" : sTable;
     sv.send(200, "text/html", sTable);
   });
 

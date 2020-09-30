@@ -7,10 +7,10 @@ void initHM10() {
   pinMode(TX_HM10, OUTPUT);
   HM10.begin(9600, SWSERIAL_8N1, RX_HM10, TX_HM10, false, 512);
   delay(1000);
-  sendAT("AT+ROLE1", true, 1000);
-  sendAT("AT+IMME1", true, 1000);
-  sendAT("AT+SCAN5", true, 1000);
-  sendAT("AT+RESET", true, 1000);
+  sendAT("AT+ROLE1", true, 500);
+  sendAT("AT+IMME1", true, 500);
+  sendAT("AT+SCAN3", true, 500);
+  sendAT("AT+RESET", true, 500);
 }
 
 void sendAT(String cmd, bool res, int tim) {
@@ -36,21 +36,24 @@ String getInfoRX() {
 }
 
 String iBeaconScanner() {
+  clearBuffer();
   String sData = "";
   String sdt = "";
   long _time = 0;
   Serial.print("\r\n");
   sendAT("AT+RESET", true, 1000);
   HM10.print("AT+DISI?");
-  delay(3000);
+  wait(3000);
   int i = 0;
   while (1) {
-    while (HM10.available() > 0) {
+    handleClientServer();
+    while (HM10.available() > 0) {     
       char c = HM10.read();
       //Serial.print(c);
       sData += c;
       sData.replace("OK+DISC:00000000:00000000000000000000000000000000:0000000000:", "");
       _time = 0;
+      handleClientServer();
     }
     if (sData.indexOf("OK+DISCE") != -1 && _time >= 2000) {
       Serial.println("sData iBeacon: " + sData + "\n");

@@ -7,15 +7,27 @@ void initSDcard() {
     Serial.println("Card failed, or not present");
     return;
   }
+  saveData("Ten Thiet Bi", "Vi Tri 1", "Vi Tri 2", "Vi Tri 3", "Ngay/Gio\n");
   Serial.println("card initialized.");
 }
 
-void saveData(String pos, int t1, int t2, int t3, String _time_) {
-  String data = pos + "," + String(t1) + "," + String(t2) + "," + String(t3) + "," + _time_;
+void saveDataToFile(String sData) {
+  SDCard = SD.open("data.csv", FILE_WRITE);
+  if (SDCard) {
+    SDCard.print(sData);
+    SDCard.close();
+    Serial.println("Writing to file successfully!");
+  }
+  SDCard = SD.open("/");
+  printDirectory(SDCard);
+}
+
+void saveData(String pos, String t1, String t2, String t3, String _time_) {
+  String data = pos + "," + t1 + "," + t2 + "," + t3 + "," + _time_;
   if (SD.exists("data.csv")) {
     SDCard = SD.open("data.csv", FILE_WRITE);
     if (SDCard) {
-      SDCard.println(data);
+      SDCard.print(data);
       SDCard.close();
       Serial.println("Writing to file successfully!");
     }
@@ -24,27 +36,24 @@ void saveData(String pos, int t1, int t2, int t3, String _time_) {
     SDCard = SD.open("data.csv", FILE_WRITE);
     SDCard.println(data);
     SDCard.close();
+    Serial.println("Writting Header text to file successfully!");
   }
 }
 
-
-void printDirectory(File dir, int numTabs) {
+void printDirectory(File dir) {
   while (true) {
-    File entry =  dir.openNextFile();
+    File entry =  SDCard.openNextFile();
     if (! entry) {
       // no more files
       break;
     }
-    for (uint8_t i = 0; i < numTabs; i++) {
-      Serial.print('\t');
-    }
+    Serial.print("File Name: ");
     Serial.print(entry.name());
     if (entry.isDirectory()) {
       Serial.println("/");
-      printDirectory(entry, numTabs + 1);
+      printDirectory(entry);
     } else {
-      // files have sizes, directories do not
-      Serial.print("\t\t");
+      Serial.print("  Size: ");
       Serial.println(entry.size(), DEC);
     }
     entry.close();

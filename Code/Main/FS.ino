@@ -8,9 +8,11 @@
 
 void initFS() {
   SPIFFS.begin();
-  //removeFile("/setmac.txt.txt");
-  listAllFile();
+  //removeFile("/table.html");
+  //listAllFile();
   getAllMacByFile();
+  contentMac = getStringFile("setmac.txt");
+  setNameByMac();
   for (int i = 0; i < 10; i++) {
     Serial.println("Mac: " + listmac[i] + "  len: " + String(listmac[i].length()));
   }
@@ -58,21 +60,35 @@ String listAllFile() {
 void getAllMacByFile() {
   String str = getStringFile("setmac.txt");
   int i = 0;
-  int newix = str.indexOf("\n", i);
+  int newix = str.indexOf(":", i);
   int oldix = 0;
   while (newix != -1 && i < 10) {
-    newix = str.indexOf("\n", oldix + 1);
+    newix = str.indexOf(":", oldix + 1);
     if (newix != -1) {
       if (i == 0) {
-        listmac[i] = str.substring(oldix, newix-1);
+        listmac[i] = str.substring(oldix, newix);
         i++;
       }
       else {
-        listmac[i] = str.substring(oldix + 1, newix-1);
+        listmac[i] = str.substring(newix - 12, newix);
         i++;
       }
     }
     oldix = newix;
+  }
+}
+
+void setNameByMac() {
+  String ives = contentMac;
+  int idStart = 0;
+  int idStop  = 0;
+  for (int i = 0; i < 10; i++) {
+    idStart = ives.indexOf(":", idStart + 1);
+    idStop  = ives.indexOf("\n", idStop + 1);
+    if (idStart != -1 && idStop != -1) {
+      String rs = ives.substring(idStart + 1, idStop - 1);
+      mapName[listmac[i]] = rs;
+    }
   }
 }
 
