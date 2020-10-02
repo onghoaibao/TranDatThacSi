@@ -5,14 +5,8 @@ const long utcOffsetInSeconds = 7 * 3600;
 String weekDays[7] = {"Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"};
 String months[12] = {"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"};
 
-// Define NTP Client to get time
 WiFiUDP ntpUDP;
 NTPClient timeClient(ntpUDP, "pool.ntp.org");
-// Set offset time in seconds to adjust for your timezone, for example:
-// GMT +1 = 3600
-// GMT +8 = 28800
-// GMT -1 = -3600
-// GMT 0 = 0
 
 int oldSecond = 0;
 String oldDateTime = "";
@@ -31,7 +25,7 @@ String getTimeFormat() {
   String weekDay = weekDays[timeClient.getDay()];
 
   String currentTime = String(currentHour < 10 ? (String(0) + currentHour) : currentHour) + ":" +
-                       String(currentMinute < 10 ? (String(0) + currentMinute) : currentMinute) + ":" + 
+                       String(currentMinute < 10 ? (String(0) + currentMinute) : currentMinute) + ":" +
                        String(currentSecond < 10 ? (String(0) + currentSecond) : currentSecond);
   //Serial.println("Current time: " + currentTime);
   //Serial.println("");
@@ -54,9 +48,21 @@ String getDateFormat() {
 
 void wait(int t) {
   long i = 0;
+  long k=0;
   while (i < t) {
     delay(1);
-    handleClientServer();
+    handleClientServer(); 
+    if ((te1 >= 90 || te2 >= 90 || te3 >= 90) && k == 500) {
+      LevelTwoAlarm(100);
+      k = 0;
+    }
+    else if ((te1 >= 60 || te2 >= 60 || te3 >= 60) && k == 500) {
+      LevelOneAlarm(100);
+      k = 0;
+    }
     i++;
+    k++;
   }
+  String dt = date_now + String("  ") + time_now;
+  displayLCD(String(" ") + dt.substring(0, dt.length() - 3), 0, 0);
 }

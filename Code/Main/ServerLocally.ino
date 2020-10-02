@@ -31,10 +31,18 @@ void initServerLocal() {
     Serial.print(".");
     timeout++;
   }
+  if (timeout <= 40) {
+    ConnectWifiAlarm();
+
+  }
+  ip = WiFi.localIP().toString().c_str();
   Serial.println();
   Serial.println("WiFi connected");
-  Serial.println("IP address: ");
-  Serial.println(WiFi.localIP());
+  Serial.print("IP address: ");
+  Serial.println(ip);
+  date_now = getDateFormat();
+  time_now = getTimeFormat();
+  showDateIP(date_now + String("  ") + time_now);
 
   sv.on("/trainsfile", HTTP_ANY, [] {
     //Serial.println(String("Accept: ") + ++count);
@@ -135,12 +143,14 @@ void initServerLocal() {
   sv.begin();
 }
 
+int change = 0;
 String getHTML() {
   String data = "";
   sTable = "";
   int mspSize = mapData.size();
   int y = 0;
   int icounter = 0;
+  int n = 0;
   for (int i = 0; i < mspSize; i++) {
     int t1 = mapData[listmac[i]][0].toInt();
     int t2 = mapData[listmac[i]][1].toInt();
@@ -149,9 +159,9 @@ String getHTML() {
       nLine = nLine + mspSize;
       String stt = String("<tr>");
       String sn = String("<th>") + String(mapName[listmac[i]]) + String("</th>");
-      String s1 = String(90 <= t1 ? "<th style=\"background-color:#FF0000;\">" : (60 <= t1 ? "<th style=\"background-color:#ffcc00;\">" : "<th style=\"background-color:#00cc00;\">")) + String(t1) + String("</th>");
-      String s2 = String(90 <= t2 ? "<th style=\"background-color:#FF0000;\">" : (60 <= t2 ? "<th style=\"background-color:#ffcc00;\">" : "<th style=\"background-color:#00cc00;\">")) + String(t2) + String("</th>");
-      String s3 = String(90 <= t3 ? "<th style=\"background-color:#FF0000;\">" : (60 <= t3 ? "<th style=\"background-color:#ffcc00;\">" : "<th style=\"background-color:#00cc00;\">")) + String(t3) + String("</th>");
+      String s1 = String(t1 == 9999 ? "<th style=\"background-color:#9EA09F;\">" : 90 <= t1 ? "<th style=\"background-color:#FF0000;\">" : (60 <= t1 ? "<th style=\"background-color:#ffcc00;\">" : "<th style=\"background-color:#00cc00;\">")) + (t1 == 9999 ? String("invalid") : String(t1)) + String("</th>");
+      String s2 = String(t2 == 9999 ? "<th style=\"background-color:#9EA09F;\">" : 90 <= t2 ? "<th style=\"background-color:#FF0000;\">" : (60 <= t2 ? "<th style=\"background-color:#ffcc00;\">" : "<th style=\"background-color:#00cc00;\">")) + (t2 == 9999 ? String("invalid") : String(t2)) + String("</th>");
+      String s3 = String(t3 == 9999 ? "<th style=\"background-color:#9EA09F;\">" : 90 <= t3 ? "<th style=\"background-color:#FF0000;\">" : (60 <= t3 ? "<th style=\"background-color:#ffcc00;\">" : "<th style=\"background-color:#00cc00;\">")) + (t3 == 9999 ? String("invalid") : String(t3)) + String("</th>");
       String sr = String("<th rowspan=\"") + String(mspSize) + String("\">") + String(time_now) + String("</th>") + String("</tr>");
       data = data + stt + sn + s1 + s2 + s3 + sr + String("\n");
       icounter++;
@@ -160,9 +170,9 @@ String getHTML() {
       y++;
       String stt = String("<tr>");
       String sn = String("<th>") + String(mapName[listmac[i]]) + String("</th>");
-      String s1 = String(90 <= t1 ? "<th style=\"background-color:#FF0000;\">" : (60 <= t1 ? "<th style=\"background-color:#ffcc00;\">" : "<th style=\"background-color:#00cc00;\">")) + String(t1) + String("</th>");
-      String s2 = String(90 <= t2 ? "<th style=\"background-color:#FF0000;\">" : (60 <= t2 ? "<th style=\"background-color:#ffcc00;\">" : "<th style=\"background-color:#00cc00;\">")) + String(t2) + String("</th>");
-      String s3 = String(90 <= t3 ? "<th style=\"background-color:#FF0000;\">" : (60 <= t3 ? "<th style=\"background-color:#ffcc00;\">" : "<th style=\"background-color:#00cc00;\">")) + String(t3) + String("</th>");
+      String s1 = String(t1 == 9999 ? "<th style=\"background-color:#9EA09F;\">" : 90 <= t1 ? "<th style=\"background-color:#FF0000;\">" : (60 <= t1 ? "<th style=\"background-color:#ffcc00;\">" : "<th style=\"background-color:#00cc00;\">")) + (t1 == 9999 ? String("invalid") : String(t1)) + String("</th>");
+      String s2 = String(t2 == 9999 ? "<th style=\"background-color:#9EA09F;\">" : 90 <= t2 ? "<th style=\"background-color:#FF0000;\">" : (60 <= t2 ? "<th style=\"background-color:#ffcc00;\">" : "<th style=\"background-color:#00cc00;\">")) + (t2 == 9999 ? String("invalid") : String(t2)) + String("</th>");
+      String s3 = String(t3 == 9999 ? "<th style=\"background-color:#9EA09F;\">" : 90 <= t3 ? "<th style=\"background-color:#FF0000;\">" : (60 <= t3 ? "<th style=\"background-color:#ffcc00;\">" : "<th style=\"background-color:#00cc00;\">")) + (t3 == 9999 ? String("invalid") : String(t3)) + String("</th>");
       data = data + stt + sn + s1 + s2 + s3 + String("</tr>") + String("\n");
       icounter++;
       if (icounter == mspSize) {
@@ -171,7 +181,32 @@ String getHTML() {
         data = "";
       }
     }
+    if ((change + i < mspSize) && (n < 2)) {
+      if (change + 1 < mspSize) {
+        int t1 = mapData[listmac[change + i]][0].toInt();
+        int t2 = mapData[listmac[change + i]][1].toInt();
+        int t3 = mapData[listmac[change + i]][2].toInt();
+        displayLCD(String(" ") + listmac[change + i].substring(listmac[change + i].length() - 4, listmac[change + i].length()) + String(": ") + String(t1 == 9999 ? String("__") : String(t1)) + " " + String(t2 == 9999 ? String("__") : String(t2)) + " " + String(t3 == 9999 ? String("__") : String(t3)), i + 2, 0);
+        lcd.setCursor(17, 2);
+        lcd.createChar(0, degree);
+        lcd.write(byte(0));
+      }
+      else {
+        int t1 = mapData[listmac[0]][0].toInt();
+        int t2 = mapData[listmac[0]][1].toInt();
+        int t3 = mapData[listmac[0]][2].toInt();
+        displayLCD(String(" ") + listmac[0].substring(listmac[0].length() - 4, listmac[0].length()) + String(": ") + String(t1 == 9999 ? String("__") : String(t1)) + " " + String(t2 == 9999 ? String("__") : String(t2)) + " " + String(t3 == 9999 ? String("__") : String(t3)), i + 2, 0);
+        lcd.setCursor(17, 3);
+        lcd.createChar(0, degree);
+        lcd.write(byte(0));
+      }
+      Serial.println(String("Change=") + String(change) + String("   LCD: ") + String(t1) + " " + String(t2) + " " + String(t3) + " ");
+      delay(100);
+      n++;
+    }
+
   }
+  change = change + 1 >= mspSize ? 0 : change + 1;
   return "";
 }
 

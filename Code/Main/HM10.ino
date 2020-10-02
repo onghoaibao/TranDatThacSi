@@ -98,28 +98,6 @@ void getUUIDByIBeacon(String sData) {
     Serial.println("K=" + String(k) + "  " + listTemp[k]);
   }
 }
-//
-//void savingDataIBeacon() {
-//  String lKey[SIZE_IBEACON] = {};
-//  for (int i = 0; i < SIZE_IBEACON; i++) {
-//    int i1 = List_Data[i].indexOf(":");
-//    String sKey = List_Data[i].substring(0, i1);
-//    String sMajor = List_Data[i].substring(i1 + 1, i1 + 5);
-//    String sMinor = List_Data[i].substring(i1 + 5, i1 + 9);
-//    for (int i = 0; i < SIZE_IBEACON; i++) {
-//      if (!lKey[i].equals(sKey)){
-//          long iMinor = convertHEXtoInt(String(sMinor));
-//          long iMajor = convertHEXtoInt(String(sMajor));
-//          //Serial.print("fiBeacon: " + String(sKey) + "   " + String(iMajor) + "  " + String(iMinor) + "   ");
-//          float fiBeacon = iMajor*1.0 + iMinor/100.0;
-//          //Serial.println(fiBeacon);
-//          mapData[sKey] = fiBeacon - 100.0;
-//          lKey[i] = sKey;
-//          break;
-//      }
-//    }
-//  }
-//}
 
 long convertHEXtoInt(String data) {
   if (data.length() <= 5) {

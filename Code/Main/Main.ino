@@ -1,16 +1,17 @@
 #include "Header.h"
-
+bool bInitAll = false;
 void setup() {
   Serial.begin(115200);
   Serial.println("\n------------------");
+  delay(3000);
+  initNTP();
+  initLCD();
   initSDcard();
   initHM10();
-  //  initLCD();
-  //  initRegister();
+  initRegister();
   initFS();
   initServerLocal();
-  initNTP();
-  delay(5000);
+  delay(2000);
 }
 
 void loop() {

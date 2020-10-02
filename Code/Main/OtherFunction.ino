@@ -6,7 +6,7 @@ void handleData(String sData) {
   date_now = getDateFormat();
   time_now = getTimeFormat();
   String sSaveFile = "";
-  for (int i = 0; i < 10; i++) {
+  for (int i = 0; i < SIZE_MAC; i++) {
     String mac = listmac[i];
     if (mac != "") {
       int ix = sData.indexOf(mac);
@@ -20,10 +20,20 @@ void handleData(String sData) {
         int pos1 = majo / 100;
         int pos2 = majo % 100;
         int pos3 = mnor;
+        te1 = pos1; 
+        te2 = pos2; 
+        te3 = pos3;
+        //DisplayDataOnLCD(mac.substring(8, 12));
+        if ((te1 >= 90 || te2 >= 90 || te3 >= 90)) {
+          LevelTwoAlarm(100);
+        }
+        else if ((te1 >= 60 || te2 >= 60 || te3 >= 60)) {
+          LevelOneAlarm(100);
+        }
         mapData[mac] = {{String(pos1), String(pos2), String(pos3)}};
         sSaveFile += mapName[mac] + "," + String(pos1) + "," + String(pos2) + "," +  String(pos3) + "," + time_now + "/" + date_now + "\n";
       }
-      else{
+      else {
         sSaveFile += mapName[mac] + "," + String(9999) + "," + String(9999) + "," +  String(9999) + "," + time_now + "/" + date_now + "\n";
       }
     }

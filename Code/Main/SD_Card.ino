@@ -5,8 +5,10 @@ void initSDcard() {
   pinMode(CS_SDC, OUTPUT);
   if (!SD.begin(CS_SDC)) {
     Serial.println("Card failed, or not present");
+    displayLCD(String("SD Card Failed"), 0, 0);
     return;
   }
+  displayLCD(String("SD Card ready"), 0, 0);
   saveData("Ten Thiet Bi", "Vi Tri 1", "Vi Tri 2", "Vi Tri 3", "Ngay/Gio\n", true);
   Serial.println("card initialized.");
 }
@@ -18,8 +20,8 @@ void saveDataToFile(String sData) {
     SDCard.close();
     Serial.println("Writing to file successfully!");
   }
-  SDCard = SD.open("/");
-  printDirectory(SDCard);
+//  SDCard = SD.open("/");
+//  printDirectory(SDCard);
 }
 
 void saveData(String pos, String t1, String t2, String t3, String _time_, bool st) {

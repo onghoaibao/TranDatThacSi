@@ -1,10 +1,13 @@
 #include "Header.h"
 
 const byte pin = D0;
+//  writeByte(0xDF);   // Cam + coi ON
+//  writeByte(0xBF);   // Do + Coi ON
+//  writeByte(0x7F);   // Coi + Do + Cam = OFF
 
-
-void initRegister(){
-  pinMode(pin, OUTPUT);  
+void initRegister() {
+  pinMode(pin, OUTPUT);
+  digitalWrite(pin, 1);
 }
 
 void Bit1() {
@@ -41,15 +44,50 @@ void WriteByte(byte data) {
 }
 
 void LevelOneAlarm(int t) {
-  WriteByte(0x20);
-  delay(t);
-  WriteByte(0x00);
-  delay(t);
+  int i = 0;
+  WriteByte(0xDF);
+  while (i < t) {
+    handleClientServer();
+    delay(1);
+    i++;
+  }
+  i = 0;
+  WriteByte(0x7F);
+  while (i < t) {
+    handleClientServer();
+    delay(1);
+    i++;
+  }
 }
 
 void LevelTwoAlarm(int t) {
-  WriteByte(0x10);
-  delay(t);
-  WriteByte(0x00);
-  delay(t);
+  int i = 0;
+  WriteByte(0xBF);
+  while (i < t) {
+    handleClientServer();
+    delay(1);
+    i++;
+  }
+  i = 0;
+  WriteByte(0x7F);
+  while (i < t) {
+    handleClientServer();
+    delay(1);
+    i++;
+  }
+}
+
+void ConnectWifiAlarm() {
+  WriteByte(0x9F);
+  delay(200);
+  WriteByte(0x7F);
+  delay(200);
+  WriteByte(0x9F);
+  delay(200);
+  WriteByte(0x7F);
+  delay(200);
+}
+
+void turnOffArlam() {
+  WriteByte(0x7F);
 }

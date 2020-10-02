@@ -15,6 +15,9 @@
 #include <map>
 #include <LiquidCrystal_I2C.h>
 
+String ip;
+int te1, te2, te3 = 0;
+
 const int SIZE_MAC = 6;
 String rx_data[3] = {};
 String listmac[SIZE_MAC] = {};
@@ -34,7 +37,10 @@ String getHTML();
 
 // LCD Function
 void initLCD();
-void showLCD();
+void showLCD(String dt, int row);
+void DisplayDataOnLCD(String t1, String t2, String t3, String t11, String t22, String t33, String dat, String tim, String ip);
+void showDateIP(String dt);
+void displayLCD(String s, int row, int col);
 
 // SD-Card Function
 void initSDcard();
@@ -54,6 +60,11 @@ void Bit1();
 void Bit0();
 void Latch();
 void WriteByte(byte data);
+void LevelOneAlarm(int t);
+void LevelTwoAlarm(int t);
+void ConnectWifiAlarm();
+void turnOffArlam();
+
 
 // NTPC function
 String time_now;
@@ -86,4 +97,15 @@ MapName mapName;
 void handleData(String sData);
 long convertHexToDec(String sdt);
 void initMapData();
+
+byte degree[8] = {
+  0B01110,
+  0B01010,
+  0B01110,
+  0B00000,
+  0B00000,
+  0B00000,
+  0B00000,
+  0B00000
+};
 #endif

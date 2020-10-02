@@ -13,9 +13,9 @@ void initFS() {
   getAllMacByFile();
   contentMac = getStringFile("setmac.txt");
   setNameByMac();
-//  for (int i = 0; i < 10; i++) {
-//    Serial.println("Mac: " + listmac[i] + "  len: " + String(listmac[i].length()));
-//  }
+  for (int i = 0; i < 10; i++) {
+    Serial.println("Mac: " + listmac[i] + "  len: " + String(listmac[i].length()));
+  }
 }
 
 boolean saveFile(String fileName, const char* content, uint16_t len) {
